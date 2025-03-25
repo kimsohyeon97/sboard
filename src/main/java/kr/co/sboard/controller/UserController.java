@@ -1,20 +1,20 @@
 package kr.co.sboard.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import kr.co.sboard.config.AppInfo;
+import jakarta.servlet.http.HttpSession;
 import kr.co.sboard.dto.TermsDTO;
 import kr.co.sboard.dto.UserDTO;
 import kr.co.sboard.service.TermsService;
 import kr.co.sboard.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -82,6 +82,21 @@ public class UserController {
 
         // JSON 반환
         return ResponseEntity.ok().body(resultMap);
+    }
+
+    @PostMapping("/user/email/auth")
+    public ResponseEntity<Boolean> emailAuth(@RequestBody Map<String,String> map, HttpSession session){
+        // JSON 단일 문자열값이 직접 String으로 매핑되지 않기 때문에 JSON과 호환되는 Map 타입으로 JSON 수신
+
+        log.info("authCode : {}", map.get("authCode"));
+
+        String authCode = map.get("authCode");
+        String sessAuthcode = (String) session.getAttribute("authCode");
+
+        if(authCode.equals(sessAuthcode)){
+            return ResponseEntity.ok().body(true);
+        }
+        return ResponseEntity.ok().body(false);
     }
 
 
