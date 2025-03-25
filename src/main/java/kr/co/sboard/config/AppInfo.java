@@ -15,6 +15,6 @@ public class AppInfo {
     @Value("${spring.application.name}") // application.yml 파일이 속성값으로 초기화
     private String appName;
 
-    @Value("${spring.application.version}")
+    @Value("${version}")
     private String appVersion;
 }
